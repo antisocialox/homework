@@ -25,3 +25,42 @@ tree* node(tree* parent, int x) {
     return tmp;
 }
 
+void leftRotate(tree*& tr, tree* Node) {
+    tree* tmp = Node->right;
+    Node->right = tmp->left;
+    if (tmp->left != NULL)
+        tmp->left->parent = Node;
+    tmp->parent = Node->parent;
+    if (tmp->parent == NULL) {
+        tr = tmp;
+        tmp->color = 0;
+    }
+    else {
+        if (Node == Node->parent->left)
+            Node->parent->left = tmp;
+        else
+            Node->parent->right = tmp;
+    }
+    tmp->left = Node;
+    Node->parent = tmp;
+}
+
+void rightRotate(tree*& tr, tree* Node) {
+    tree* tmp = Node->left;
+    Node->left = tmp->right;
+    if (tmp->right != NULL)
+        tmp->right->parent = Node;
+    tmp->parent = Node->parent;
+    if (tmp->parent == NULL) {
+        tr = tmp;
+        tmp->color = 0;
+    }
+    else {
+        if (Node == Node->parent->left)
+            Node->parent->left = tmp;
+        else
+            Node->parent->right = tmp;
+    }
+    tmp->right = Node;
+    Node->parent = tmp;
+}
