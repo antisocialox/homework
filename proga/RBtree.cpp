@@ -28,10 +28,10 @@ tree* node(tree* parent, int x) {
 void leftRotate(tree*& tr, tree* Node) {
     tree* tmp = Node->right;
     Node->right = tmp->left;
-    if (tmp->left != NULL)
+    if (tmp->left)
         tmp->left->parent = Node;
     tmp->parent = Node->parent;
-    if (tmp->parent == NULL) {
+    if (!tmp->parent) {
         tr = tmp;
         tmp->color = 0;
     }
@@ -48,10 +48,10 @@ void leftRotate(tree*& tr, tree* Node) {
 void rightRotate(tree*& tr, tree* Node) {
     tree* tmp = Node->left;
     Node->left = tmp->right;
-    if (tmp->right != NULL)
+    if (tmp->right)
         tmp->right->parent = Node;
     tmp->parent = Node->parent;
-    if (tmp->parent == NULL) {
+    if (!tmp->parent) {
         tr = tmp;
         tmp->color = 0;
     }
@@ -63,4 +63,29 @@ void rightRotate(tree*& tr, tree* Node) {
     }
     tmp->right = Node;
     Node->parent = tmp;
+}
+
+tree* grandparent(tree* Node) {
+    if (Node->parent && Node->parent->parent)
+        return Node->parent->parent;
+    return NULL;
+}
+
+tree* uncle(tree* Node) {
+    tree* ded = grandparent(Node);
+    if (!ded)
+        return NULL;
+    if (Node->parent = ded->left)
+        return ded->right;
+    return ded->left;
+}
+
+tree* sibling(tree* Node) {
+    if (Node && Node->parent) {
+        if (Node == Node->parent->left)
+            return Node->parent->right;
+        else
+            return Node->parent->left;
+    }
+    return NULL;
 }
