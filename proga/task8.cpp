@@ -98,27 +98,37 @@ void bfs(vector <vector <int>> gr, int x, vector <int> res) {
 
 // ввод ориентированного графа
 void inputOriented(vector <vector <int>>& gr) {
-    int x, y;
-    for (int i = 0; i < gr.size(); ++i) {
+    int n, x, y; // n - кол-во связей
+    for (int i = 0; i < n; ++i) {
         cin >> x >> y;
         gr[x].push_back(y);
     }
 }
 
+// ввод неориентированного графа
+void inputUnoriented(vector <vector <int>>& gr) {
+    int n, x, y; // n - кол-во связей
+    for (int i = 0; i < n; ++i) {
+        cin >> x >> y;
+        gr[x].push_back(y);
+        gr[y].push_back(x);
+    }
+}
+
 // Дан ориентированный граф. Вывести на экран все вершины, не смежные с данной.
 void task1() {
-    int n, X; // Х - данная вершина
-    cin >> n;
-    vector <vector <int>> gr(n);
+    int m, X; // m - кол-во вершин, Х - данная вершина
+    cin >> m;
+    vector <vector <int>> gr(m);
     inputOriented(gr);
     cin >> X;
-    vector <bool> vert(n, true); // вершины, не смежные с данной - true
+    vector <bool> vert(m, true); // вершины, не смежные с данной - true
     // убираю вершины, следующие из Х
     for (int i = 0; i < gr[X].size(); ++i) {
         vert[gr[X][i]] = false;
     }
     // убираю вершины, из которых следует Х
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < m; ++i) {
         for (int j = 0; j < gr[i].size(); ++j) {
             if (gr[i][j] == X) {
                 vert[i] = false;
@@ -127,7 +137,7 @@ void task1() {
         }
     }
     // вывод
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < m; ++i) {
         if (vert[i])
             cout << i << " ";
     }
@@ -136,16 +146,16 @@ void task1() {
 
 // Дан ориентированный граф. Вставить в граф ребро, соединяющее вершины A и B.
 void task2() {
-    int n, A, B;
-    cin >> n;
-    vector <vector <int>> gr(n);
+    int m, A, B;
+    cin >> m;
+    vector <vector <int>> gr(m);
     inputOriented(gr);
     gr[A].push_back(B); // добавил ребро А -> В
     vector <int> res; //результат обхода в глубину
-    // прохожу по всем узлам графа, пока не найду тот, из которого можно попасть во все вершины (res.size() == n), чтобы вывести полный обход в глубину
-    for (int i = 0; i < n; ++i) {
+    // прохожу по всем узлам графа, пока не найду тот, из которого можно попасть во все вершины (res.size() == m), чтобы вывести полный обход в глубину
+    for (int i = 0; i < m; ++i) {
         dfs(gr, i, res);
-        if (res.size() == n)
+        if (res.size() == m)
             break;
         res.clear();
     }
@@ -153,4 +163,16 @@ void task2() {
     for (auto i : res)
         cout << i << " ";
     cout << endl;
+}
+
+// Дан неориентированный граф. Подсчитать степень каждой вершины.
+void task3() {
+    setlocale(LC_ALL, "rus");
+    int m;
+    cin >> m;
+    vector <vector <int>> gr(m);
+    inputUnoriented(gr);
+    for (int i = 0; i < m; ++i) {
+        cout << "\tСтепень вершины " << i << " равна " << gr[i].size() << endl;
+    }
 }
