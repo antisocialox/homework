@@ -140,5 +140,17 @@ void task2() {
     cin >> n;
     vector <vector <int>> gr(n);
     inputOriented(gr);
-
+    gr[A].push_back(B); // добавил ребро А -> В
+    vector <int> res; //результат обхода в глубину
+    // прохожу по всем узлам графа, пока не найду тот, из которого можно попасть во все вершины (res.size() == n), чтобы вывести полный обход в глубину
+    for (int i = 0; i < n; ++i) {
+        dfs(gr, i, res);
+        if (res.size() == n)
+            break;
+        res.clear();
+    }
+    // вывод
+    for (auto i : res)
+        cout << i << " ";
+    cout << endl;
 }
