@@ -13,8 +13,46 @@ struct queue{
     queue* next;
 };
 
-// ввод графа
-void input(vector <vector <int>>& gr) {
+void push(stack*& h, int x) {
+    stack* tmp = new stack;
+    tmp->inf = x;
+    tmp->next = h;
+    h = tmp;
+}
+
+int pop(stack*& h) {
+    stack* tmp = h;
+    int x = tmp->inf;
+    h = h->next;
+    delete tmp;
+    return x;
+}
+
+void push(queue*& h, queue*& t, int x) {
+    queue* tmp = new queue;
+    tmp->inf = x;
+    tmp->next = nullptr;
+    if (!h && !t) {
+        h = t = tmp;
+    }
+    else {
+        t->next = tmp;
+        t = tmp;
+    }
+}
+
+int pop(queue*& h, queue*& t) {
+    queue* tmp = h;
+    h = h->next;
+    int x = tmp->inf;
+    if (!h)
+        t = nullptr;
+    delete tmp;
+    return x;
+}
+
+// ввод ориентированного графа
+void inputOriented(vector <vector <int>>& gr) {
     int x, y;
     for (int i = 0; i < gr.size(); ++i) {
         cin >> x >> y;
@@ -27,7 +65,7 @@ void task1() {
     int n, X; // Х - данная вершина
     cin >> n;
     vector <vector <int>> gr(n);
-    input(gr);
+    inputOriented(gr);
     cin >> X;
     vector <bool> vert(n, true); // вершины, не смежные с данной - true
     // убираю вершины, следующие из Х
@@ -49,4 +87,13 @@ void task1() {
             cout << i << " ";
     }
     cout << endl;
+}
+
+// Дан ориентированный граф. Вставить в граф ребро, соединяющее вершины A и B.
+void task2() {
+    int n, A, B;
+    cin >> n;
+    vector <vector <int>> gr(n);
+    inputOriented(gr);
+
 }
