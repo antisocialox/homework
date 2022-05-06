@@ -51,6 +51,51 @@ int pop(queue*& h, queue*& t) {
     return x;
 }
 
+void dfs(vector <vector <int>> gr, int x, vector <int> res) {
+    stack* h = nullptr;
+    vector <int> used(gr.size());
+    used[x] = 1;
+    res.push_back(x);
+    push(h, x);
+    while(h) {
+        int inf = h->inf;
+        bool flag = false;
+        int i;
+        for (i = 0; i < gr[inf].size(); ++i) {
+            if (!used[gr[inf][i]]) {
+                flag = true;
+                break;
+            }
+        }
+        if (flag) {
+            used[gr[inf][i]] = 1;
+            res.push_back(gr[inf][i]);
+            push(h, gr[inf][i]);
+        }
+        else
+            pop(h);
+    }
+}
+
+void bfs(vector <vector <int>> gr, int x, vector <int> res) {
+    queue* h = nullptr;
+    queue* t = nullptr;
+    vector <int> used(gr.size());
+    used[x] = 1;
+    res.push_back(x);
+    push(h, t, x);
+    while (h) {
+        int inf = pop(h, t);
+        for (int i = 0; i < gr[inf].size(); ++i) {
+            if (!used[gr[inf][i]]) {
+                used[gr[inf][i]] = 1;
+                res.push_back(gr[inf][i]);
+                push(h, t, gr[inf][i]);
+            }
+        }
+    }
+}
+
 // ввод ориентированного графа
 void inputOriented(vector <vector <int>>& gr) {
     int x, y;
