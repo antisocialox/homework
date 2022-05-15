@@ -15,6 +15,7 @@ struct queue{
     queue* next;
 };
 
+// для 4 задания
 vector <vector <int>> cycles;
 set <vector <int>> sort_cycles;
 
@@ -56,7 +57,7 @@ int pop(queue*& h, queue*& t) {
     return x;
 }
 
-void dfs(vector <vector <int>> gr, int x, vector <int> res) {
+void dfs(vector <vector <int>> gr, int x, vector <int>& res) {
     stack* h = nullptr;
     vector <int> used(gr.size());
     used[x] = 1;
@@ -104,6 +105,7 @@ void bfs(vector <vector <int>> gr, int x, vector <int> res) {
 // ввод ориентированного графа
 void inputOriented(vector <vector <int>>& gr) {
     int n, x, y; // n - кол-во связей
+    cin >> n;
     for (int i = 0; i < n; ++i) {
         cin >> x >> y;
         gr[x].push_back(y);
@@ -113,6 +115,7 @@ void inputOriented(vector <vector <int>>& gr) {
 // ввод неориентированного графа
 void inputUnoriented(vector <vector <int>>& gr) {
     int n, x, y; // n - кол-во связей
+    cin >> n;
     for (int i = 0; i < n; ++i) {
         cin >> x >> y;
         gr[x].push_back(y);
@@ -120,6 +123,7 @@ void inputUnoriented(vector <vector <int>>& gr) {
     }
 }
 
+// если нашел цикл, записываю его в массив
 void add_cycles(int start, int end, vector <int> pred) {
     int cur = end;
     vector <int> tmp, sort_tmp;
@@ -130,7 +134,8 @@ void add_cycles(int start, int end, vector <int> pred) {
     tmp.push_back(start);
     sort_tmp = tmp;
     sort(sort_tmp.begin(), sort_tmp.end());
-    if (!sort_cycles.count(sort_tmp)) { 
+    // если отсортированный массив еще не встречался в множестве циклов, то tmp - новый цикл
+    if (!sort_cycles.count(sort_tmp) && tmp.size() > 2) { 
         reverse(tmp.begin(), tmp.end());
         cycles.push_back(tmp);
         sort_cycles.insert(sort_tmp);
@@ -153,6 +158,7 @@ void cycle_search(int cur, vector <vector <int>> gr, vector <int>& used, vector 
     used[cur] = 0;
 }
 
+// обход в глубину от вершины А со счетчиком расстояния до В
 int dfs_with_search_of_dist(int A, int B, vector <vector <int>> gr) {
     int dist = gr.size(), tmpdist = 1;
     stack* h = nullptr;
@@ -164,6 +170,7 @@ int dfs_with_search_of_dist(int A, int B, vector <vector <int>> gr) {
         bool flag = false;
         int i;
         for (i = 0; i < gr[inf].size(); ++i) {
+            // если дошел до вершины В то от данной вершины нет смысла продолжать, обновляю dist
             if (gr[inf][i] == B) {
                 dist = min(dist, tmpdist);
                 break;
@@ -176,11 +183,11 @@ int dfs_with_search_of_dist(int A, int B, vector <vector <int>> gr) {
         if (flag) {
             used[gr[inf][i]] = 1;
             push(h, gr[inf][i]);
-            tmpdist++;
+            tmpdist++; // т.к. спустился на одну вершину глубже
         }
         else {
             pop(h);
-            tmpdist--;
+            tmpdist--; // т.к. поднялся на одну вершину
         }
     }
     return dist;
@@ -194,6 +201,7 @@ void task1() {
     inputOriented(gr);
     cin >> X;
     vector <bool> vert(m, true); // вершины, не смежные с данной - true
+    vert[X] = false;
     // убираю вершины, следующие из Х
     for (int i = 0; i < gr[X].size(); ++i) {
         vert[gr[X][i]] = false;
@@ -221,6 +229,7 @@ void task2() {
     cin >> m;
     vector <vector <int>> gr(m);
     inputOriented(gr);
+    cin >> A >> B;
     gr[A].push_back(B); // добавил ребро А -> В
     vector <int> res; //результат обхода в глубину
     // прохожу по всем узлам графа, пока не найду тот, из которого можно попасть во все вершины (res.size() == m), чтобы вывести полный обход в глубину
@@ -259,6 +268,7 @@ void task4() {
     vector <int> pred(m, -1);
     for (int i = 0; i < m; ++i) {
         cycle_search(i, gr, used, pred);
+        pred.resize(m, -1);
     }
     if (cycles.size() == 0)
         cout << "Граф не содержит циклов." << endl;
@@ -285,7 +295,7 @@ void task5() {
 
 int main() {
     setlocale(LC_ALL, "rus");
-    cout << "\nЗадание 1.\nВведите кол-во вершин графа, кол-во ребер графа и соединенные вершины:\n";
+    cout << "\nЗадание 1.\nВведите кол-во вершин графа, кол-во ребер графа,соединенные вершины и вершину Х:\n";
     task1();
     cout << "\nЗадание 2.\nВведите кол-во вершин графа, кол-во ребер графа, соединенные вершины и вершины А и В:\n";
     task2();
