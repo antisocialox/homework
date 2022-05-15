@@ -153,6 +153,39 @@ void cycle_search(int cur, vector <vector <int>> gr, vector <int>& used, vector 
     used[cur] = 0;
 }
 
+int dfs_with_search_of_dist(int A, int B, vector <vector <int>> gr) {
+    int dist = gr.size(), tmpdist = 1;
+    stack* h = nullptr;
+    vector <int> used(gr.size());
+    used[A] = 1;
+    push(h, A);
+    while (h) {
+        int inf = h->inf;
+        bool flag = false;
+        int i;
+        for (i = 0; i < gr[inf].size(); ++i) {
+            if (gr[inf][i] == B) {
+                dist = min(dist, tmpdist);
+                break;
+            }
+            else if (!used[gr[inf][i]]) {
+                flag = true;
+                break;
+            }
+        }
+        if (flag) {
+            used[gr[inf][i]] = 1;
+            push(h, gr[inf][i]);
+            tmpdist++;
+        }
+        else {
+            pop(h);
+            tmpdist--;
+        }
+    }
+    return dist;
+}
+
 // Дан ориентированный граф. Вывести на экран все вершины, не смежные с данной.
 void task1() {
     int m, X; // m - кол-во вершин, Х - данная вершина
@@ -238,4 +271,29 @@ void task4() {
             cout << endl;
         }
     }
+}
+
+// Дан невзвешенный граф неориентированный граф. Найти кратчайший путь между вершинами A и В.
+void task5() {
+    int m, A, B;
+    cin >> m;
+    vector <vector <int>> gr(m);
+    inputUnoriented(gr);
+    cin >> A >> B;
+    cout << dfs_with_search_of_dist(A, B, gr) << endl;
+}
+
+int main() {
+    setlocale(LC_ALL, "rus");
+    cout << "\nЗадание 1.\nВведите кол-во вершин графа, кол-во ребер графа и соединенные вершины:\n";
+    task1();
+    cout << "\nЗадание 2.\nВведите кол-во вершин графа, кол-во ребер графа, соединенные вершины и вершины А и В:\n";
+    task2();
+    cout << "\nЗадание 3.\nВведите кол-во вершин графа, кол-во ребер графа и соединенные вершины:\n";
+    task3();
+    cout << "\nЗадание 4.\nВведите кол-во вершин графа, кол-во ребер графа и соединенные вершины:\n";
+    task4();
+    cout << "\nЗадание 5.\nВведите кол-во вершин графа, кол-во ребер графа, соединенные вершины и вершины А и В:\n";
+    task5();
+    return 0;
 }
