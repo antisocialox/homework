@@ -176,3 +176,12 @@ void task3() {
         cout << "\tСтепень вершины " << i << " равна " << gr[i].size() << endl;
     }
 }
+
+// Дан неориентированный граф. Определить содержит ли он циклы. Если да, то вывести их.
+void task4() {
+    int m;
+    cin >> m;
+    vector <vector <int>> gr(m);
+    inputUnoriented(gr);
+    
+}
