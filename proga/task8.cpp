@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <set>
 
 using namespace std;
 
@@ -12,6 +14,9 @@ struct queue{
     int inf;
     queue* next;
 };
+
+vector <vector <int>> cycles;
+set <vector <int>> sort_cycles;
 
 void push(stack*& h, int x) {
     stack* tmp = new stack;
@@ -115,6 +120,39 @@ void inputUnoriented(vector <vector <int>>& gr) {
     }
 }
 
+void add_cycles(int start, int end, vector <int> pred) {
+    int cur = end;
+    vector <int> tmp, sort_tmp;
+    while (cur != start) {
+        tmp.push_back(cur);
+        cur = pred[cur];
+    }
+    tmp.push_back(start);
+    sort_tmp = tmp;
+    sort(sort_tmp.begin(), sort_tmp.end());
+    if (!sort_cycles.count(sort_tmp)) { 
+        reverse(tmp.begin(), tmp.end());
+        cycles.push_back(tmp);
+        sort_cycles.insert(sort_tmp);
+    }
+}
+
+void cycle_search(int cur, vector <vector <int>> gr, vector <int>& used, vector <int>& pred) {
+    used[cur] = 1;
+    for (int i = 0; i < gr[cur].size(); ++i) {
+        if (pred[gr[cur][i]] == cur)
+            continue;
+        else if (used[gr[cur][i]] == 0) {
+            pred[gr[cur][i]] = cur;
+            cycle_search(gr[cur][i], gr, used, pred);
+        }
+        else if (used[gr[cur][i]] == 1) {
+            add_cycles(gr[cur][i], cur, pred);
+        }
+    }
+    used[cur] = 0;
+}
+
 // Дан ориентированный граф. Вывести на экран все вершины, не смежные с данной.
 void task1() {
     int m, X; // m - кол-во вершин, Х - данная вершина
@@ -179,9 +217,25 @@ void task3() {
 
 // Дан неориентированный граф. Определить содержит ли он циклы. Если да, то вывести их.
 void task4() {
+    setlocale(LC_ALL, "rus");
     int m;
     cin >> m;
     vector <vector <int>> gr(m);
     inputUnoriented(gr);
-    
+    vector <int> used(m);
+    vector <int> pred(m, -1);
+    for (int i = 0; i < m; ++i) {
+        cycle_search(i, gr, used, pred);
+    }
+    if (cycles.size() == 0)
+        cout << "Граф не содержит циклов." << endl;
+    else {
+        cout << "Граф содержит циклы: " << endl;
+        for (auto i : cycles) {
+            for (auto j : i) {
+                cout << j << " ";
+            }
+            cout << endl;
+        }
+    }
 }
