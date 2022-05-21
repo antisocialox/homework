@@ -8,18 +8,21 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{srcltx}
 \usepackage{fancyvrb}
 \usepackage{longtable}
 \usepackage{array}
 \usepackage[english,russian]{babel}
 \usepackage{tempora}
 
-\usepackage[colorlinks=true]{hyperref}
+\usepackage[colorlinks=false]{hyperref}
 
 
 \newcommand{\eqdef}{\stackrel {\rm def}{=}}
 
 \newtheorem{lem}{Лемма}
+
+\graphicspath{pics}
 
 \begin{document}
 
@@ -35,5 +38,25 @@
     \item Использования возможностей только КС"=грамматики может быть недостаточно для решения поставленной задачи.
 \end{enumerate}
 Эти и некоторые другие задачи позволяет решить концепция абстрактных синaтаксических деревьев.
+
+\subsection{Определение}
+
+Абстрактное синтаксическое дерево (АСД) --- конечное помеченное ориентированное дерево, 
+в котором внутренние вершины сопоставлены с операторами языка программирования, а листья --- с соответствующими операндами\cite{asd}.
+
+Рассмотрим выражение $1+2*3$. Вид синтаксического дерева для такого
+выражения изображен на рис. \hyperref[fig:abstree]{1}:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.45]{pics/ast.png}
+    \caption{Пример абстрактного синтаксического дерева}\label{fig:abstree}
+\end{figure}
+
+Обход такого дерева для получения результата достаточно интуитивен:
+достаточно обойти дерево начиная с листьев, последовательно вычисляя значения в вершинах, соответствующих математическим операторам.
+
+\bibliographystyle{gost780uv}
+\bibliography{source}
 
 \end{document}
